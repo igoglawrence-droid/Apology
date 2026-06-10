@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I'm Sorry 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  :root {
+    --rose:    #f43f5e;
+    --blush:   #fb7185;
+    --violet:  #8b5cf6;
+    --indigo:  #6366f1;
+    --sky:     #38bdf8;
+    --cream:   rgba(255,255,255,0.08);
+    --glass:   rgba(255,255,255,0.12);
+    --border:  rgba(255,255,255,0.22);
+    --text:    rgba(255,255,255,0.92);
+    --muted:   rgba(255,255,255,0.55);
+  }
+ 
+  html { scroll-behavior: smooth; }
+ 
+  body {
+    min-height: 100vh;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    overflow-x: hidden;
+    background: #0f0018;
+  }
+ 
+  /* ── Animated gradient background ── */
+  .bg {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, #3b0764 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 80%, #4c0519 0%, transparent 55%),
+      radial-gradient(ellipse 50% 40% at 50% 50%, #1e1b4b 0%, transparent 65%),
+      #0f0018;
+    animation: bgPulse 10s ease-in-out infinite alternate;
+  }
+ 
+  @keyframes bgPulse {
+    0%   { filter: hue-rotate(0deg) brightness(1); }
+    50%  { filter: hue-rotate(15deg) brightness(1.08); }
+    100% { filter: hue-rotate(-10deg) brightness(0.95); }
+  }
+ 
+  /* Floating orbs */
+  .orb {
+    position: fixed; border-radius: 50%; pointer-events: none;
+    filter: blur(60px); opacity: 0.35; z-index: 0;
+    animation: drift 18s ease-in-out infinite alternate;
+  }
+  .orb-1 { width: 380px; height: 380px; background: var(--rose);   top: -80px;  left: -80px;  animation-duration: 14s; }
+  .orb-2 { width: 300px; height: 300px; background: var(--violet); bottom: 10%; right: -60px; animation-duration: 18s; animation-delay: -4s; }
+  .orb-3 { width: 220px; height: 220px; background: var(--sky);    top: 45%;   left: 30%;    animation-duration: 22s; animation-delay: -9s; }
+ 
+  @keyframes drift {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(30px, 20px) scale(1.05); }
+    100% { transform: translate(-20px, -30px) scale(0.97); }
+  }
+ 
+  /* ── Layout ── */
+  .page { position: relative; z-index: 1; }
+ 
+  section {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 60px 24px;
+  }
+ 
+  /* ── Glass card ── */
+  .card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    padding: 56px 52px;
+    max-width: 640px; width: 100%;
+    box-shadow:
+      0 8px 32px rgba(0,0,0,0.35),
+      inset 0 1px 0 rgba(255,255,255,0.18);
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(.4,0,.2,1), transform 0.8s cubic-bezier(.4,0,.2,1);
+  }
+  .card.visible { opacity: 1; transform: translateY(0); }
+ 
+  /* ── Typography ── */
+  .eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--blush); margin-bottom: 14px;
+  }
+  h1, h2, h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300; line-height: 1.18;
+  }
+  h1 { font-size: clamp(2.4rem, 6vw, 3.8rem); margin-bottom: 22px; }
+  h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: 18px; }
+  h3 { font-size: clamp(1.3rem, 3vw, 1.8rem); margin-bottom: 14px; }
+ 
+  .italic { font-style: italic; }
+  p { font-size: 1.02rem; line-height: 1.75; color: var(--muted); margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+ 
+  .gradient-text {
+    background: linear-gradient(135deg, #fb7185, #c084fc, #38bdf8);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+ 
+  /* ── Heartbeat hero ── */
+  .heart-hero {
+    font-size: clamp(4rem, 12vw, 8rem);
+    display: block; margin-bottom: 24px;
+    animation: heartbeat 2.2s ease-in-out infinite;
+    transform-origin: center;
+  }
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    14%       { transform: scale(1.18); }
+    28%       { transform: scale(1); }
+    42%       { transform: scale(1.12); }
+    56%       { transform: scale(1); }
+  }
+ 
+  /* ── Nav dots ── */
+  .nav {
+    position: fixed; right: 28px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 10px;
+    z-index: 100;
+  }
+  .nav-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.28);
+    border: 1px solid rgba(255,255,255,0.4);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .nav-dot.active, .nav-dot:hover {
+    background: var(--blush);
+    box-shadow: 0 0 10px var(--rose);
+    transform: scale(1.4);
+  }
+ 
+  /* ── CTA Button ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 34px;
+    background: linear-gradient(135deg, var(--rose), var(--violet));
+    border: none; border-radius: 50px; color: #fff;
+    font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500;
+    cursor: pointer; margin-top: 28px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s;
+    box-shadow: 0 4px 20px rgba(244,63,94,0.4);
+    text-decoration: none;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(244,63,94,0.55); }
+  .btn:active { transform: translateY(0); }
+ 
+  /* ── Reasons list ── */
+  .reasons { list-style: none; margin: 20px 0; }
+  .reasons li {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+    color: var(--muted); font-size: 0.97rem; line-height: 1.65;
+  }
+  .reasons li:last-child { border-bottom: none; }
+  .reasons li::before {
+    content: "✦"; color: var(--blush); font-size: 0.75rem;
+    margin-top: 4px; flex-shrink: 0;
+  }
+ 
+  /* ── Promise card ── */
+  .promise-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 22px;
+  }
+  .promise-item {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 20px 18px;
+    transition: background 0.25s, transform 0.25s;
+  }
+  .promise-item:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-3px);
+  }
+  .promise-icon { font-size: 1.6rem; margin-bottom: 8px; }
+  .promise-item p { font-size: 0.88rem; margin: 0; }
+ 
+  /* ── Final message ── */
+  .final-heart {
+    font-size: 5rem; display: block; margin: 0 auto 20px;
+    animation: heartbeat 2s ease-in-out infinite;
+    text-align: center;
+  }
+  .divider {
+    width: 48px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blush), transparent);
+    margin: 28px auto;
+  }
+ 
+  /* ── Yes button interaction ── */
+  #forgiven-msg {
+    display: none;
+    text-align: center;
+    animation: fadeUp 0.6s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+ 
+  /* ── Floating petals ── */
+  .petal {
+    position: fixed; top: -20px; pointer-events: none; z-index: 200;
+    animation: fall linear forwards;
+    font-size: 1.2rem; opacity: 0.75;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0.8; }
+    100% { transform: translateY(110vh) rotate(540deg) translateX(40px); opacity: 0; }
+  }
+ 
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--blush); border-radius: 4px; }
+ 
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    .card { padding: 38px 28px; }
+    .promise-grid { grid-template-columns: 1fr; }
+    .nav { right: 14px; }
+  }
+ 
+  @media (prefers-reduced-motion: reduce) {
+    .orb, .heart-hero, .final-heart { animation: none; }
+    .bg { animation: none; }
+  }
+
+  .popup-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none;
+    align-items: center; justify-content: center; padding: 24px; z-index: 999;
+  }
+  .popup-card {
+    background: rgba(15,0,24,0.96); border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 24px; padding: 28px; max-width: 520px; width: 100%; text-align: center;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.45);
+  }
+  .popup-card img {
+    max-width: 100%; border-radius: 18px; margin-bottom: 18px;
+  }
+  .popup-card h3 {
+    margin-bottom: 12px; font-size: 1.5rem;
+  }
+  .popup-card p { color: var(--text); margin-bottom: 20px; }
+  .popup-close {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 12px 22px; border-radius: 999px; background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.18); color: #fff; cursor: pointer; font-weight: 500;
+  }
+  .popup-word {
+    color: #93c5fd; cursor: pointer; text-decoration: underline; text-underline-offset: 4px;
+  }
+</style>
+</head>
+<body>
+ 
+<!-- Background layers -->
+<div class="bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+ 
+<!-- Side nav -->
+<nav class="nav" id="nav">
+  <div class="nav-dot active" data-section="0" title="Home"></div>
+  <div class="nav-dot" data-section="1" title="I'm Sorry"></div>
+  <div class="nav-dot" data-section="2" title="Apology again"></div>
+  <div class="nav-dot" data-section="3" title="My Promises"></div>
+  <div class="nav-dot" data-section="4" title="Always You"></div>
+</nav>
+ 
+<div class="page">
+
+  <audio id="bg-audio" src="Moavii - We Are (freetouse.com).mp3" loop preload="auto"></audio>
+ 
+  <!-- ── Section 1 · Hero ── -->
+  <section id="s0">
+    <div class="card" data-card>
+      <span class="heart-hero">💌</span>
+      <div class="eyebrow">A message from the heart</div>
+      <h1 class="italic">I owe you<br><span class="gradient-text">an apology.</span></h1>
+      <p>Some things are hard to say out loud, so I wrote this, instead every word meant, every feeling real. Please take a moment and read all of this.</p>
+      <a class="btn" onclick="scrollToSection(1)">Read my apology <span>↓</span></a>
+    </div>
+  </section>
+ 
+  <!-- ── Section 2 · The Apology ── -->
+  <section id="s1">
+    <div class="card" data-card>
+      <h2 class="italic">I'm truly, deeply <span class="gradient-text">sorry.</span></h2>
+      <p>I hurt you, and that's something I can't undo, but I can own it fully. What I said and did was wrong, and you deserved so much better from me.</p>
+      <p>I know an apology doesn't erase pain. But I want you to know I've been thinking about this every moment, not to excuse myself, but because you matter more to me than I made it seem in that moment.</p>
+      <div class="divider"></div>
+      <p>I want you to know that my feelings for you have never been based solely on how you look. Yes, I think you're beautiful, but what made me fall for you goes far beyond that.</p>
+      <p>I fell in love with your kindness, your personality, the way you care for others, your humor, your strength even during difficult times, and the little things that make you who you are.</p>
+      <a class="btn" onclick="scrollToSection(2)">Next <span>→</span></a>
+    </div>
+  </section>
+
+  <section id="s1-copy">
+    <div class="card" data-card>
+      <h2 class="italic">I'm truly, deeply <span class="gradient-text">sorry.</span></h2>
+      <p>I also truly believe that the friends you've made on Discord value you as a real friend.</p>
+      <p>he connections you've built, they were built through your sincerity, your presence, and the friendship you give to people</p>
+      <div class="divider"></div>
+      <p>You deserve kindness from others, but most importantly, you deserve kindness from yourself too. I don't want you blaming yourself or thinking less of who you are because of this misunderstanding.</p>
+      <p>The person I love is not just your appearance, it's your <span class="popup-word" data-image="heart">heart</span>, your <span class="popup-word" data-image="mind">mind</span>, your <span class="popup-word" data-image="smile">smile</span>, and the genuine soul behind everything you do.(Blue words are clickable)</p>
+      <a class="btn" onclick="scrollToSection(3)">Next <span>→</span></a>
+    </div>
+  </section>
+ 
+  <!-- ── Section 3 · Promises ── -->
+  <section id="s2">
+    <div class="card" data-card>
+      <h2 class="italic">Mariah Aifos Palattao <span class="gradient-text">I promise.</span></h2>
+      <p>Words without action are empty. So here are the things I'm committing to not as a performance, but as real changes I'm willing to make for us.</p>
+      <div class="promise-grid">
+        <div class="promise-item">
+          <div class="promise-icon">👂</div>
+          <h3>Be more understanding</h3>
+          <p>I'll be more understanding and try to see things from your perspective.</p>
+        </div>
+        <div class="promise-item">
+          <div class="promise-icon">🕊️</div>
+          <h3>Be more mindful</h3>
+          <p>I'll carefully consider my words and actions before speaking or acting.</p>
+        </div>
+        <div class="promise-item">
+          <div class="promise-icon">💬</div>
+          <h3>Speak honestly</h3>
+          <p>I'll tell you how I feel openly and with kindness.</p>
+        </div>
+        <div class="promise-item">
+          <div class="promise-icon">🌱</div>
+          <h3>Keep growing</h3>
+          <p>I'll work on myself every day, for you and for us.</p>
+        </div>
+      </div>
+      <a class="btn" onclick="scrollToSection(4)">One last thing <span>💛</span></a>
+    </div>
+  </section>
+ 
+  <!-- ── Section 4 · Final ── -->
+  <section id="s3">
+    <div class="card" data-card style="text-align:center;">
+      <span class="final-heart">🥺</span>
+      <div class="eyebrow">Always</div>
+      <h2 class="italic">You are worth every<br><span class="gradient-text">effort and apology.</span></h2>
+      <p style="max-width:420px;margin:0 auto 12px;">Whatever happens, I want you to know that choosing you every day is the easiest decision I make. I'm sorry. Truly.</p>
+      <p style="max-width:420px;margin:0 auto;">Can you find it in your heart to give me another chance?</p>
+      <div class="divider"></div>
+ 
+      <div id="btn-group">
+        <button class="btn" onclick="forgiven()" style="margin-right:10px;">Yes, I will 💛</button>
+        <button class="btn" onclick="notYet()" style="background: rgba(255,255,255,0.12); box-shadow:none; border:1px solid var(--border);">Not yet…</button>
+      </div>
+ 
+      <div id="forgiven-msg">
+        <span style="font-size:3rem;">🎉💕</span>
+        <h3 class="italic" style="margin-top:16px; font-size:2rem;">
+          <span class="gradient-text">Thank you, my love.</span>
+        </h3>
+        <p>I promise to never take your grace for granted. You are everything. 🌸</p>
+      </div>
+    </div>
+  </section>
+ 
+</div>
+ 
+<script>
+  // ── Intersection observer for card reveals ──
+  const cards = document.querySelectorAll('[data-card]');
+  const sections = document.querySelectorAll('section');
+  const dots = document.querySelectorAll('.nav-dot');
+ 
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.15 });
+ 
+  cards.forEach(c => observer.observe(c));
+ 
+  // ── Nav dot active state ──
+  const secObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const idx = [...sections].indexOf(e.target);
+        dots.forEach(d => d.classList.remove('active'));
+        if (dots[idx]) dots[idx].classList.add('active');
+      }
+    });
+  }, { threshold: 0.5 });
+ 
+  sections.forEach(s => secObserver.observe(s));
+ 
+  // ── Scroll helper ──
+  function scrollToSection(idx) {
+    sections[idx].scrollIntoView({ behavior: 'smooth' });
+  }
+ 
+  dots.forEach(d => {
+    d.addEventListener('click', () => scrollToSection(+d.dataset.section));
+  });
+ 
+  // ── Forgiven interaction ──
+  function forgiven() {
+    document.getElementById('btn-group').style.display = 'none';
+    const msg = document.getElementById('forgiven-msg');
+    msg.style.display = 'block';
+    launchPetals(24);
+  }
+ 
+  function notYet() {
+    const btn = event.target;
+    btn.textContent = 'I understand… I\'ll keep trying 💙';
+    btn.style.opacity = '0.7';
+    btn.disabled = true;
+  }
+ 
+  // ── Petal shower ──
+  function launchPetals(count) {
+    const symbols = ['🌸','🌺','✨','💕','🌷','💫','🌸','💗'];
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'petal';
+        el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.animationDuration = (2.5 + Math.random() * 2.5) + 's';
+        el.style.fontSize = (0.9 + Math.random() * 0.9) + 'rem';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 5500);
+      }, i * 90);
+    }
+  }
+ 
+  // ── Subtle mouse-parallax on orbs ──
+  document.addEventListener('mousemove', e => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 20;
+    const y = (e.clientY / window.innerHeight - 0.5) * 20;
+    document.querySelector('.orb-1').style.transform = `translate(${x * 0.6}px, ${y * 0.6}px)`;
+    document.querySelector('.orb-2').style.transform = `translate(${-x * 0.4}px, ${-y * 0.4}px)`;
+    document.querySelector('.orb-3').style.transform = `translate(${x * 0.3}px, ${y * 0.8}px)`;
+  });
+
+  // ── Popup image words ──
+  const wordPopup = document.createElement('div');
+  wordPopup.className = 'popup-overlay';
+  wordPopup.innerHTML = `
+    <div class="popup-card">
+      <img id="popup-img" src="" alt="" />
+      <button class="popup-close" onclick="closePopup()">Close</button>
+    </div>
+  `;
+  document.body.appendChild(wordPopup);
+
+  const popupData = {
+    heart: {
+      src: '1000017843.jpg'
+    },
+    mind: {
+      src: '1000017840.jpg'
+    },
+    smile: {
+      src: '1000017839.jpg'
+    }
+  };
+
+  document.querySelectorAll('.popup-word').forEach(el => {
+    el.addEventListener('click', () => {
+      const data = popupData[el.dataset.image];
+      if (!data) return;
+      document.getElementById('popup-img').src = data.src;
+      document.getElementById('popup-img').alt = el.dataset.image;
+      wordPopup.style.display = 'flex';
+    });
+  });
+
+  wordPopup.addEventListener('click', event => {
+    if (event.target === wordPopup) {
+      closePopup();
+    }
+  });
+
+  function closePopup() {
+    wordPopup.style.display = 'none';
+  }
+
+  // ── Click sound via Web Audio API ──
+  let _audioCtx = null;
+  function playClickSound() {
+    try {
+      if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = _audioCtx;
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = 'square';
+      o.frequency.value = 880; // frequency in Hz
+      g.gain.setValueAtTime(0.0001, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.15, ctx.currentTime + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.12);
+      o.connect(g); g.connect(ctx.destination);
+      o.start();
+      o.stop(ctx.currentTime + 0.12);
+    } catch (err) {
+      console.warn('Audio unavailable', err);
+    }
+  }
+
+  // Attach the click sound to all elements with class "btn"
+  document.querySelectorAll('.btn').forEach(el => {
+    el.addEventListener('click', () => {
+      playClickSound();
+    }, { passive: true });
+  });
+
+  // ── Background music control ──
+  const bgAudio = document.getElementById('bg-audio');
+  const musicToggle = document.createElement('button');
+  musicToggle.id = 'music-toggle';
+  musicToggle.className = 'btn';
+  musicToggle.textContent = 'Play music';
+  musicToggle.style.position = 'fixed';
+  musicToggle.style.left = '16px';
+  musicToggle.style.bottom = '16px';
+  musicToggle.style.zIndex = '200';
+  document.body.appendChild(musicToggle);
+
+  musicToggle.addEventListener('click', () => {
+    if (!bgAudio) return;
+    if (bgAudio.paused) {
+      bgAudio.play().then(() => { musicToggle.textContent = 'Pause music'; }).catch(() => {});
+    } else {
+      bgAudio.pause();
+      musicToggle.textContent = 'Play music';
+    }
+  });
+
+  // Start music on first user interaction with any .btn (gesture requirement)
+  const startMusicOnFirstClick = (e) => {
+    if (!bgAudio) return;
+    if (bgAudio.paused) {
+      bgAudio.play().then(() => { musicToggle.textContent = 'Pause music'; }).catch(() => {});
+    }
+    document.querySelectorAll('.btn').forEach(b => b.removeEventListener('click', startMusicOnFirstClick));
+  };
+  document.querySelectorAll('.btn').forEach(b => b.addEventListener('click', startMusicOnFirstClick));
+</script>
+</body>
+</html>
